@@ -10,6 +10,9 @@ permissions:
 jobs:
   run-autograding-tests:
     runs-on: ubuntu-latest
+    container:
+      image: coqorg/coq:8.20
+    
     if: github.actor != 'github-classroom[bot]'
     steps:
     - name: Checkout code
@@ -28,12 +31,18 @@ jobs:
       #       expected-output: 3
       #       comparison-method: exact
       #       timeout: 10
-    - name: Autograding Reporter
-      uses: classroom-resources/autograding-grading-reporter@v1
-      # For more information on this runner, see the documentation at https://github.com/classroom-resources/autograding-grading-reporter
-      # To output the results of the tests, you can use the
-      # autograding-grading-reporter action like this:
-      # env:
-      # ADDITION-TEST_RESULTS: "${{ steps.addition - test.outputs.result }}"
-      #     with:
-      #         runners: addition-test
+    - name: Run coq verifier
+      id: coq-verifier
+      run: /home/coq/.opam/4.13.1+flambda/bin/coqtop -batch -silent -l FPIntro.v && echo "result=OK" >> $GITHUB_OUTPUT
+
+    # - name: Autograding Reporter
+    #   uses: classroom-resources/autograding-grading-reporter@v1
+    #   # For more information on this runner, see the documentation at https://github.com/classroom-resources/autograding-grading-reporter
+    #   # To output the results of the tests, you can use the
+    #   # autograding-grading-reporter action like this:
+    #   # env:
+    #   # ADDITION-TEST_RESULTS: "${{ steps.addition - test.outputs.result }}"
+    #   #     with:
+    #   #         runners: addition-test
+    #   env:
+    #     COQ-VERIFIER_RESULTS: "${{steps.coq-verifier.outputs.result}}"
