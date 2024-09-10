@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: coqorg/coq:8.20
+      options: --user root
     
     if: github.actor != 'github-classroom[bot]'
     steps:
