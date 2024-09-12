@@ -140,12 +140,12 @@ Proof. Admitted.
 Theorem add_0_r : forall n:nat,
   n + O = n.
 Proof.
-  intros n. destruct n as [| n'] eqn:E.
+  (* intros n. destruct n as [| n'] eqn:E.
   - (* n = 0 *)
     reflexivity. (* so far so good... *)
   - (* n = S n' *)
     simpl.       (* свели задачу к себе самой... нужна индукция! *)
-  Undo 5.
+  Undo 5. *)
   induction n as [| n' IHn'].
   - (* n = 0 *)    reflexivity.
   - (* n = S n' *) simpl. rewrite -> IHn'. reflexivity.
