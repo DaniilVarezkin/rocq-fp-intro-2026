@@ -171,13 +171,25 @@ Theorem negb_involutive : forall b : bool,
 Proof.
   intros b.
   simpl.
-  destruct b as [| b'] eqn:E.
+  destruct b eqn:E.
+  - simpl.
+    reflexivity.
+  - simpl.
+    reflexivity.
 Qed.
 
 (* Exercise: замените Admitted на доказательство *)
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
-Proof. Admitted.
+Proof. 
+  intros b c H.
+  destruct b eqn:Eb.
+  - simpl in H.
+    apply H.
+
+  - simpl in H.
+    discriminate.
+Qed.
 
 Theorem add_0_r : forall n:nat,
   n + O = n.
@@ -196,22 +208,43 @@ Qed.
 (* Exercise *)
 Theorem mul_0_r : forall n:nat,
   n * O = O.
-Proof. Admitted.
+Proof.
+  induction n as [| n' IHn'].
+  - reflexivity.
+  - simpl. rewrite -> IHn'. reflexivity.
+Qed.
 
 (* Exercise *)
 Theorem plus_n_Sm : forall n m : nat,
   S (n + m) = n + (S m).
-Proof. Admitted.
+Proof.
+  intros n m.
+  induction n as [| n' IHn'].
+  - simpl. reflexivity.
+  - simpl. rewrite -> IHn'. reflexivity.
+Qed.
 
 (* Exercise *)
 Theorem add_comm : forall n m : nat,
   n + m = m + n.
-Proof. Admitted.
+Proof.
+  intros n m.
+  induction n as [| n' IHn'].
+  - simpl. rewrite -> add_0_r. reflexivity.
+  - simpl. rewrite -> IHn'. rewrite -> plus_n_Sm. reflexivity.
+Qed.
 
 (* Exercise *)
 Theorem add_assoc : forall n m p : nat,
   n + (m + p) = (n + m) + p.
-Proof. Admitted.
+Proof. 
+  intros n m p.
+  induction n as [| n' IHn'].
+  - simpl. reflexivity.
+  - simpl. rewrite -> IHn'. reflexivity. 
+Qed.
+
+(* Далее листы *)
 
 Inductive natlist : Type :=
   | nil
