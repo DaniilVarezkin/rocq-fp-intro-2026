@@ -35,6 +35,7 @@ Inductive nat : Type :=
 
 Definition one := S O.
 Definition two := S one.
+Definition three := S two.
 
 (* Для лямбда функций есть свой синтаксис *)
 Definition plus2 : nat -> nat := fun x => S (S x).
@@ -62,12 +63,38 @@ Notation "x + y" := (plus x y).
 Compute (two + two).
 
 (* Exercise: напишите функцию умножения двух чисел *)
-Fixpoint mult (n : nat) (m : nat) : nat := O.
+Fixpoint mult (n : nat) (m : nat) : nat := 
+  match n with
+  | O => O
+  | S n' => m + mult n' m
+  end.
+
 Notation "x * y" := (mult x y).
 
+Compute two * two.
+
 (* Exercise: напишите функцию факториала *)
+Fixpoint fact (n: nat) : nat :=
+  match n with
+  | O => one
+  | S n' => n * fact(n') 
+  end.
+
+Notation "x !" := (fact x).
+
+Compute fact three = two + two + two.
+
 
 (* Exercise: напишите функцию возведения в степень *)
+Fixpoint pow (n: nat) (m: nat) : nat :=
+  match m with 
+  | O => one
+  | S m' => n * pow n m'
+  end.
+
+Notation "x ^ y" := (pow x y).
+
+Compute (three ^ two) = (three * three).
 
 (* Можно сопоставлять с образцом сразу несколько переменных *)
 Fixpoint eqb (n m : nat) : bool :=
@@ -90,7 +117,11 @@ Qed.
 
 (* Exercise: замените Admitted на доказательство *)
 Example mult_0_l : forall n:nat, O = O * n.
-Proof. Admitted.
+Proof.
+  intros n.
+  simpl.
+  reflexivity.
+Qed.
 
 Theorem plus_id_example : forall n m:nat,
   n = m ->
@@ -105,7 +136,14 @@ Qed.
 (* Exercise: замените Admitted на доказательство *)
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
-Proof. Admitted.
+Proof. 
+  intros n m o.
+  intros H H2.
+  rewrite -> H.
+  rewrite -> H2.
+  reflexivity.
+
+Qed.
 
 Theorem plus_n_0_m_0 : forall p q : nat,
   (O + p) + (O + q) = p + q.
@@ -130,7 +168,11 @@ Qed.
 (* Exercise: замените Admitted на доказательство *)
 Theorem negb_involutive : forall b : bool,
   negb (negb b) = b.
-Proof. Admitted.
+Proof.
+  intros b.
+  simpl.
+  destruct b as [| b'] eqn:E.
+Qed.
 
 (* Exercise: замените Admitted на доказательство *)
 Theorem andb_true_elim2 : forall b c : bool,
